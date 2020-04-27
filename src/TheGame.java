@@ -14,19 +14,26 @@ public class TheGame {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            movieArray.add(new Movie(line, movieCount));
+            String[] movieName = new String[line.length()];
+            movieArray.add(new Movie(line, movieCount, movieName));
             System.out.println(line);
             movieCount++;
         }
         int guess = randomMovie(movieCount);
-        int numOfLetters = movieArray.get(guess-1).getNumOfLetters();
-        System.out.println ("The movie has: " + numOfLetters + " letters");
-        System.out.println("the movie number is: " + guess);
-        movieArray.get(guess-1).printHiddenTitle(numOfLetters);
+        Movie chosenMovie = movieArray.get(guess-1); //selected movie
+        int numOfLetters = chosenMovie.getNumOfLetters(); //number of letters in the movie
+        chosenMovie.hideMovieName(chosenMovie.getMovieName(),numOfLetters);// hide each letter with "_"
+        chosenMovie.printHiddenName(chosenMovie.getMovieName(),numOfLetters); //prints the hidden name
 
-        System.out.println("count is: " + movieCount);
 
-// array z literami nazwy filmu
+
+
+//        System.out.println ("The movie has: " + numOfLetters + " letters");
+//        System.out.println("the movie number is: " + guess);
+//        movieArray.get(guess-1).printHiddenTitle(movieLetters, numOfLetters);
+//
+//        System.out.println("count is: " + movieCount);
+
 // wyszukiwanie, ktre zwraca numer gdzie jest dana litera (a co jak duplikaty??
 // odgadniete litery wstawiamy do array zamiasst "_" i wyswietlamy
 
@@ -37,6 +44,7 @@ public class TheGame {
         int movieNumber = (int) (Math.random() * num) + 1;
         return movieNumber;
     }
+
 
 
 
