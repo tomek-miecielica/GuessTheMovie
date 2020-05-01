@@ -34,17 +34,21 @@ public class Movie {
     public char[] getMovieName(){
         return movieName;
     }
+    //dodaj error handling by nie byo out of range
+    public char getMovieLetter(int i){
+        return movieName[i];
+    }
 
 
     public static char[] hideMovieName(char[] array, int size){
-        for (int i = 0; i<size; i++){
+        for (int i = 0; i < size; i++){
             array[i] = '_';
         }
         return array;
     }
     public static void printHiddenName (char[] array, int size){
         System.out.println("Ypu are guessing: ");
-        for (int i =0; i<size;i++){
+        for (int i = 0; i < size; i++){
             System.out.print(array[i]);
         }
     }
