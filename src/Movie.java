@@ -10,6 +10,8 @@ public class Movie {
         this.index = index;
         this.movieName = movieName;
     }
+
+    //setters
     public void setTitle(String movieTitle){
         title = movieTitle;
     }
@@ -19,7 +21,7 @@ public class Movie {
     public void setMovieName (int size){
         movieName = new String[size - 1]; // because it starts from 0, not from 1
     }
-
+    //getters
     public String getTitle(){
         return title;
     }
@@ -41,11 +43,13 @@ public class Movie {
         return array;
     }
     public static void printHiddenName (String[] array, int size){
+        System.out.println("Ypu are guessing: ");
         for (int i =0; i<size;i++){
             System.out.print(array[i]);
         }
-
     }
+
+
 
 }
 

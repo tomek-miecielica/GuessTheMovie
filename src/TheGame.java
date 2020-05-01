@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class TheGame {
@@ -8,7 +7,7 @@ public class TheGame {
         File file = new File("Lista.txt");
         Scanner scanner = new Scanner(file);
 
-        //counts # of movies in the file & initiates movies as an array
+        //counts # of movies in the file & initiates movie titles as an array
         int movieCount = 0;
         ArrayList<Movie> movieArray = new ArrayList<Movie>();
 
@@ -24,6 +23,17 @@ public class TheGame {
         int numOfLetters = chosenMovie.getNumOfLetters(); //number of letters in the movie
         chosenMovie.hideMovieName(chosenMovie.getMovieName(),numOfLetters);// hide each letter with "_"
         chosenMovie.printHiddenName(chosenMovie.getMovieName(),numOfLetters); //prints the hidden name
+        System.out.println("Guess a letter: ");
+        Scanner sc = new Scanner(System.in);
+        String letter = sc.nextLine(); //caught letter provided by the user
+//        for (int i = 0; i < numOfLetters; i++ ){ // tutaj chce wrzucic odgadniete literki, ale problem polega na tym, ze musze umiec znalezc ich indeks w tytule. Chyba zamiast stringa lepiej robic to na arrayu
+//            if(chosenMovie.getTitle().index){
+//                chosenMovie.getMovieName()[i] = letter;
+//            }
+//        }
+
+
+
 
 
 
