@@ -4,19 +4,48 @@ import java.util.Scanner;
 
 public class TheGame {
     private boolean isEnd;
+    private int numberOfAttempts;
 
     //constructor
-    public TheGame(boolean isEnd) {
+    public TheGame(boolean isEnd, int numberOfAttempts) {
         this.isEnd = isEnd;
+        this.numberOfAttempts = numberOfAttempts;
     }
-
 
 
     public static void main(String[] args) throws Exception{
 
-        TheGame game = new TheGame(false);
+        TheGame game = new TheGame(false, 10);
 
         File file = new File("Lista.txt");
+        //create the list of movies for the game
+        ArrayList<Movie> movieArray  = game.createMovieList(file);
+
+        //pick one of the movies randomly
+        int movieCount = movieArray.size();
+        int guess = randomMovie(movieCount-1);
+        Movie chosenMovie = movieArray.get(guess); //selected movie object
+        int numOfLetters = chosenMovie.getNumOfLetters(); //number of letters in the movie
+
+        //hide movie title
+        char[] hiddenMovieTitle = game.hideMovieTitle(chosenMovie);
+
+        //start the game
+        int wrongLettersGuessed = 0; //number of wrongly guessed letters
+        while (wrongLettersGuessed < game.numberOfAttempts && game.isEnd == false) {
+
+            game.displayTheRiddle(numOfLetters,hiddenMovieTitle); //show hidden movie title
+            char letter = game.catchUserInput(); // catch user's input'
+            boolean letterFound = game.isLetterFound(numOfLetters,letter,chosenMovie,hiddenMovieTitle); //check if correct guess
+            wrongLettersGuessed = game.tellIfLetterGuessed(letterFound,wrongLettersGuessed); //tell if correct guess
+            game.isEnd = game.gameEnd(hiddenMovieTitle, numOfLetters, '_'); // check if end of the game
+
+        }
+        game.displayFinalMessage(game.isEnd); // display end message
+    }
+
+   // create a list of movie titles for the game
+    public  ArrayList<Movie> createMovieList(File file) throws Exception{
         Scanner scanner = new Scanner(file);
 
         //counts # of movies in the file & initiates movie titles as an array
@@ -30,73 +59,19 @@ public class TheGame {
                 movieName[i] = line.charAt(i);
             }
             movieArray.add(new Movie(line, movieCount, movieName)); //movie objects put into one array
-            //System.out.println(line);
             movieCount++;
         }
-        int guess = randomMovie(movieCount);
-        Movie chosenMovie = movieArray.get(guess-1); //selected movie object
-        System.out.println(chosenMovie.getTitle());
-        int numOfLetters = chosenMovie.getNumOfLetters(); //number of letters in the movie
-        char[] hiddenMovieTitle = new char[numOfLetters];//initializing a char array with hidden movie title
-        for (int i = 0; i < numOfLetters; i++){
-            hiddenMovieTitle[i] = '_';
-            //System.out.print(hiddenMovieTitle[i]);
-        }
-
-        int wrongLettersGuessed = 0; //number of wrongly guessed letters
-        //chosenMovie.hideMovieName(chosenMovie.getMovieName(),numOfLetters);// hide each letter with "_"
-        //chosenMovie.printHiddenName(chosenMovie.getMovieName(),numOfLetters); //prints the hidden name
-        while (wrongLettersGuessed < 10 && game.isEnd == false ) {
-            System.out.println("You are guessing: ");
-            for (int i = 0; i < numOfLetters; i++) {
-                System.out.print(hiddenMovieTitle[i]);
-            }
-            System.out.println("");
-            System.out.println("Guess a letter: ");
-            Scanner sc = new Scanner(System.in);
-            char letter = sc.next().charAt(0); //caught letter provided by the user
-            System.out.println(letter);
-            boolean correctGuess = false;
-            for (int i = 0; i < numOfLetters; i++) { //checks if letter is a part of the title, if so write the letter into the title array
-                if (letter == chosenMovie.getMovieLetter(i)) {
-                    hiddenMovieTitle[i] = letter;
-                    correctGuess = true;
-                }
-            }
-            if (correctGuess) {
-                System.out.println("Nice! You have guessed correct letter.");
-                correctGuess = false; //restarting the variable for another round
-            } else {
-                wrongLettersGuessed++;
-            }
-            System.out.println("You have guessed (" + wrongLettersGuessed + ") wrong letters.");
-            game.isEnd = game.gameEnd(hiddenMovieTitle, numOfLetters, '_');
-            System.out.println("is end: " + game.isEnd);
-            System.out.println(wrongLettersGuessed);
-
-        }
-        if (game.isEnd) {
-            System.out.println("Congrats! You've won!!");
-        }
-        else {
-            System.out.println("I am sorry, you have just lost.");
-            }
+        return movieArray;
     }
+
 
     //generate random movie number
     public static int randomMovie(int num) {
         int movieNumber = (int) (Math.random() * num) + 1;
         return movieNumber;
     }
-
-    //write an array with "_" marks to hide title
-    public char[] hiddenMovieName(char[] array, int num){ //wyrzuc do GameHelper
-        for (int i = 0; i < num; i++){
-            array[i] = '_';
-        }
-        return array;
-    }
-    public boolean gameEnd(char[] array, int num, char a){
+    //checks if all the letters were guessed in the movie title
+    public boolean gameEnd (char[] array, int num, char a){
         boolean isEnd = true;
         for (int i = 0; i < num; i++) {
             if (array[i] == a) {
@@ -106,9 +81,71 @@ public class TheGame {
         }
         return isEnd;
     }
+    //displays final message to the user
+    public void displayFinalMessage (boolean gameEnd){
+        if (gameEnd) {
+            System.out.println("Congrats! You've won!!");
+        }
+        else {
+            System.out.println("I am sorry, you have just lost.");
+        }
+    }
 
-//Duze vs male litery...
-//kiedy koniec
-        // dodac obiekt game ktory sie zaczyna
+    //check if user input (letter) is found in the movie title
+    public boolean isLetterFound (int numOfLetters, char letter, Movie movie, char[] hiddenMovieTitle){
+        boolean correctGuess = false;
+        for (int i = 0; i < numOfLetters; i++) { //checks if letter is a part of the title, if so write the letter into the title array
+            if (letter == movie.getMovieLetter(i)) {
+                hiddenMovieTitle[i] = letter;
+                correctGuess = true;
+            }
+        }
+        return correctGuess;
+    }
+    //display the movie title riddle
+    public void displayTheRiddle(int numOfLetters, char[] hiddenMovieTitle ){
+        System.out.println("You are guessing: ");
+        for (int i = 0; i < numOfLetters; i++) {
+            System.out.print(hiddenMovieTitle[i]);
+        }
+        System.out.println("");
+        System.out.println("Guess a letter: ");
+    }
+
+    //catch user's input
+    public char catchUserInput(){
+        Scanner sc = new Scanner(System.in);
+        char letter = sc.next().charAt(0); //caught first letter provided by the user
+        return letter; // missing validation if user provided more than one letter
+    }
+    //inform if correct guess & return mistakes
+    public int tellIfLetterGuessed(boolean letterFound, int wrongLettersGuessed){
+        if (letterFound) {
+            System.out.println("Nice! You have guessed correct letter.");
+            letterFound = false; //restarting the variable for another round
+        } else {
+            wrongLettersGuessed++;
+        }
+        System.out.println("You have guessed (" + wrongLettersGuessed + ") wrong letters.");
+        return wrongLettersGuessed;
+    }
+    // hide movie title in a char array
+    public char[] hideMovieTitle(Movie chosenMovie){
+        int numOfLetters = chosenMovie.getNumOfLetters(); //number of letters in the movie
+        char[] hiddenMovieTitle = new char[numOfLetters];//initializing a char array with hidden movie title
+        for (int i = 0; i < numOfLetters; i++){
+            hiddenMovieTitle[i] = '_';
+        }
+        return hiddenMovieTitle;
+    }
 
 }
+
+//Duze vs male litery...
+//obiektowosc
+    // walidacja ze jedna litera
+    //usuniecie zbednego kodu
+    //Duze litery
+    //definicje metod zawieraja nazwy parametrow ktore malo mowia
+
+
