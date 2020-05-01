@@ -13,7 +13,10 @@ public class TheGame {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            String[] movieName = new String[line.length()];
+            char[] movieName = new char[line.length()];
+            for (int i = 0; i < line.length(); i++) { //movie title written into an array of chars
+                movieName[i] = line.charAt(i);
+            }
             movieArray.add(new Movie(line, movieCount, movieName));
             System.out.println(line);
             movieCount++;
@@ -31,22 +34,6 @@ public class TheGame {
 //                chosenMovie.getMovieName()[i] = letter;
 //            }
 //        }
-
-
-
-
-
-
-
-//        System.out.println ("The movie has: " + numOfLetters + " letters");
-//        System.out.println("the movie number is: " + guess);
-//        movieArray.get(guess-1).printHiddenTitle(movieLetters, numOfLetters);
-//
-//        System.out.println("count is: " + movieCount);
-
-// wyszukiwanie, ktre zwraca numer gdzie jest dana litera (a co jak duplikaty??
-// odgadniete litery wstawiamy do array zamiasst "_" i wyswietlamy
-
     }
 
     //generate random movie number
