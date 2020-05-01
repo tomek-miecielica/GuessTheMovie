@@ -3,7 +3,19 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TheGame {
+    private boolean isEnd;
+
+    //constructor
+    public TheGame(boolean isEnd) {
+        this.isEnd = isEnd;
+    }
+
+
+
     public static void main(String[] args) throws Exception{
+
+        TheGame game = new TheGame(false);
+
         File file = new File("Lista.txt");
         Scanner scanner = new Scanner(file);
 
@@ -34,8 +46,7 @@ public class TheGame {
         int wrongLettersGuessed = 0; //number of wrongly guessed letters
         //chosenMovie.hideMovieName(chosenMovie.getMovieName(),numOfLetters);// hide each letter with "_"
         //chosenMovie.printHiddenName(chosenMovie.getMovieName(),numOfLetters); //prints the hidden name
-
-        while (wrongLettersGuessed < 10) {
+        while (wrongLettersGuessed < 10 && game.isEnd == false ) {
             System.out.println("You are guessing: ");
             for (int i = 0; i < numOfLetters; i++) {
                 System.out.print(hiddenMovieTitle[i]);
@@ -59,8 +70,17 @@ public class TheGame {
                 wrongLettersGuessed++;
             }
             System.out.println("You have guessed (" + wrongLettersGuessed + ") wrong letters.");
+            game.isEnd = game.gameEnd(hiddenMovieTitle, numOfLetters, '_');
+            System.out.println("is end: " + game.isEnd);
+            System.out.println(wrongLettersGuessed);
 
         }
+        if (game.isEnd) {
+            System.out.println("Congrats! You've won!!");
+        }
+        else {
+            System.out.println("I am sorry, you have just lost.");
+            }
     }
 
     //generate random movie number
@@ -76,7 +96,19 @@ public class TheGame {
         }
         return array;
     }
+    public boolean gameEnd(char[] array, int num, char a){
+        boolean isEnd = true;
+        for (int i = 0; i < num; i++) {
+            if (array[i] == a) {
+                isEnd = false;
+                break;
+            }
+        }
+        return isEnd;
+    }
 
 //Duze vs male litery...
 //kiedy koniec
+        // dodac obiekt game ktory sie zaczyna
+
 }
