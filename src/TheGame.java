@@ -27,7 +27,7 @@ public class TheGame {
         Movie chosenMovie = movieArray.get(guess); //selected movie object
         int numOfLetters = chosenMovie.getNumOfLetters(); //number of letters in the movie
 
-        //hide movie title
+        //hide movie title in a char[]
         char[] hiddenMovieTitle = game.hideMovieTitle(chosenMovie);
 
         //start the game
@@ -37,7 +37,7 @@ public class TheGame {
             game.displayTheRiddle(numOfLetters,hiddenMovieTitle); //show hidden movie title
             char letter = game.catchUserInput(); // catch user's input'
             boolean letterFound = game.isLetterFound(numOfLetters,letter,chosenMovie,hiddenMovieTitle); //check if correct guess
-            wrongLettersGuessed = game.tellIfLetterGuessed(letterFound,wrongLettersGuessed); //tell if correct guess
+            wrongLettersGuessed = game.tellIfLetterGuessed(letterFound,wrongLettersGuessed); //tell if correct guess & calculate how many mistakes were made
             game.isEnd = game.gameEnd(hiddenMovieTitle, numOfLetters, '_'); // check if end of the game
 
         }
@@ -94,8 +94,12 @@ public class TheGame {
     //check if user input (letter) is found in the movie title
     public boolean isLetterFound (int numOfLetters, char letter, Movie movie, char[] hiddenMovieTitle){
         boolean correctGuess = false;
+        //converting letters so they are not case sensitive
+        char caseInsensitive = Character.toUpperCase(letter);
+        char caseInsensitive2;
         for (int i = 0; i < numOfLetters; i++) { //checks if letter is a part of the title, if so write the letter into the title array
-            if (letter == movie.getMovieLetter(i)) {
+            caseInsensitive2 = Character.toUpperCase(movie.getMovieLetter(i));
+            if (caseInsensitive == caseInsensitive2) {
                 hiddenMovieTitle[i] = letter;
                 correctGuess = true;
             }
@@ -140,12 +144,12 @@ public class TheGame {
     }
 
 }
-
-//Duze vs male litery...
-//obiektowosc
-    // walidacja ze jedna litera
-    //usuniecie zbednego kodu
-    //Duze litery
+    //TO-DO:
+    //obiektowosc - napchane w theGame
+    //walidacja ze jedna litera
+    // logika, ze ta litera juz odgadnieta
     //definicje metod zawieraja nazwy parametrow ktore malo mowia
+    // duoz zmiennych w metodach i jak cos w petli to wielokrotnie zmienne inicjalizuje.... np. isLetterfound
+    // pierwsza litera tytulu wyswietlana zawsze z duzej litery
 
 
